@@ -11,6 +11,14 @@ export default function App() {
 
   const handleAdd = () => {
     console.log(input);
+    db.transaction((tx) => {
+      tx.executeSql(
+        "INSERT INTO person (name) VALUES (?)",
+        [input],
+        (obj, res) => console.log(res),
+        (obj, err) => console.error(err)
+      );
+    });
   };
 
   React.useEffect(() => {
