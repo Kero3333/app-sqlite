@@ -1,11 +1,17 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 
 import * as SQLite from "expo-sqlite";
 
 export default function App() {
   const db = SQLite.openDatabase("database.db");
+
+  const [input, setInput] = React.useState("");
+
+  const handleAdd = () => {
+    console.log(input);
+  };
 
   React.useEffect(() => {
     db.transaction((tx) => {
@@ -20,7 +26,7 @@ export default function App() {
       tx.executeSql(
         "SELECT * FROM person",
         [],
-        (obj, res) => console.log(res),
+        (obj, res) => console.log(res.rows),
         // names != [res.rows._array] ? setNames([res.rows._array]) : "",
         (obj, err) => console.error(err)
       )
@@ -28,7 +34,14 @@ export default function App() {
   }, []);
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <View>
+        <TextInput
+          placeholder="name..."
+          onChangeText={(text) => setInput(text)}
+          value={input}
+        />
+        <Button title="Submit" onPress={handleAdd} />
+      </View>
       <StatusBar style="auto" />
     </View>
   );
